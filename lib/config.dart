@@ -43,7 +43,10 @@ class _HabitConfigPageState extends State<HabitConfigPage> {
           key: ValueKey(index),
           title: Text(widget.habitList[index]),
           trailing: CupertinoButton(
-            child: Icon(CupertinoIcons.minus),
+            child: Icon(
+              CupertinoIcons.minus_circle,
+              color: CupertinoColors.destructiveRed,
+            ),
             onPressed: () {
               setState(() {
                 widget.habitList.removeAt(index);
