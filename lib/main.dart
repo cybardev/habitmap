@@ -10,43 +10,53 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return const CupertinoApp(
       debugShowCheckedModeBanner: false,
-      title: 'HabitMap',
       theme: CupertinoThemeData(brightness: Brightness.dark),
-      home: const TabScaffold(),
+      home: AppScaffold(),
     );
   }
 }
 
-class TabScaffold extends StatefulWidget {
-  const TabScaffold({super.key});
+class AppScaffold extends StatefulWidget {
+  const AppScaffold({super.key});
 
   @override
-  State<TabScaffold> createState() => _TabScaffoldState();
+  State<AppScaffold> createState() => _AppScaffoldState();
 }
 
-class _TabScaffoldState extends State<TabScaffold> {
-  final List<Widget> _tabs = [const HabitsPage(), const ConfigPage()];
+class _AppScaffoldState extends State<AppScaffold> {
+  final List<String> _habitList = <String>[];
+  int _habitIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.calendar),
-            label: 'Habits',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.settings),
-            label: 'Config',
-          ),
-        ],
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('Habits'),
+        trailing: CupertinoButton(
+          child: Icon(CupertinoIcons.settings),
+          onPressed: () => {
+            Navigator.of(context).push(
+              CupertinoPageRoute<void>(
+                builder: (context) => HabitConfigPage(
+                  habitList: _habitList,
+                  onUpdate: () => setState(() {}),
+                ),
+              ),
+            ),
+          },
+        ),
       ),
-      tabBuilder: (BuildContext context, int index) {
-        return _tabs[index];
-      },
+      child: HabitPicker(
+        habitList: _habitList,
+        initialIndex: _habitIndex,
+        onSelected: (int selected) {
+          setState(() {
+            _habitIndex = selected;
+          });
+        },
+      ),
     );
   }
 }
